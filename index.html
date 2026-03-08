@@ -180,6 +180,9 @@ background:linear-gradient(135deg,var(--accent),var(--joker));
 .timer-display .time.warning{-webkit-text-fill-color:var(--accent);animation:pulse 1s infinite}
 .timer-label{color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:1px;transition:color .3s}
 
+.clue-badge{display:inline-flex;align-items:center;justify-content:center;padding:.4rem .6rem;border-radius:50px;background:var(--accent);color:#fff;font-weight:700;font-size:.7rem;min-width:auto;text-align:center;white-space:nowrap;max-width:5rem;overflow:hidden;text-overflow:ellipsis}
+.clue-badge.alt{background:var(--imposter)}
+
 /* ── Vote ── */
 .vote-grid{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}
 .vote-btn{flex:1 1 calc(50% - .3rem);padding:.75rem;border-radius:12px;background:var(--surface);
@@ -329,6 +332,10 @@ footer a{color:var(--accent);text-decoration:none}
     <h2 style="margin-bottom:.2rem;font-family:'Dela Gothic One',sans-serif">Discussion Time</h2>
     <p style="color:var(--muted);font-size:.85rem">Give 1-word clues & discuss. Find the Imposter!</p>
   </div>
+  <div class="card" style="background:var(--surface);padding:1rem;margin-bottom:1rem">
+    <p style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin-bottom:.6rem">Clue Order</p>
+    <div id="clueOrder" style="display:flex;flex-wrap:wrap;gap:.4rem"></div>
+  </div>
   <div class="timer-display">
     <div class="timer-label">Time Remaining</div>
     <div class="time" id="timerDisplay">01:30</div>
@@ -441,7 +448,10 @@ function startGame(){
   roles[indices[0]] = 'imposter';
   if(hasJoker && n >= 4) roles[indices[1]] = 'joker';
 
-  game = { players, roles, word, catLabel, currentPlayer:0, timerSec, timerRemaining:timerSec, timerInterval:null, timerRunning:false, votedPlayer:null, hasJoker };
+  // Randomize clue order
+  const clueOrder = shuffle([...Array(n).keys()]);
+  
+  game = { players, roles, word, catLabel, currentPlayer:0, timerSec, timerRemaining:timerSec, timerInterval:null, timerRunning:false, votedPlayer:null, hasJoker, clueOrder };
   passToPlayer(0);
 }
 
@@ -492,6 +502,17 @@ function startTimer(){
   updateTimerDisplay();
   game.timerRunning = true;
   document.getElementById('timerToggleBtn').textContent = '⏸ Pause';
+  
+  // Display randomized clue order with player names
+  const clueOrderDiv = document.getElementById('clueOrder');
+  clueOrderDiv.innerHTML = '';
+  game.clueOrder.forEach((playerIdx, position) => {
+    const badge = document.createElement('div');
+    badge.className = `clue-badge ${position % 2 === 0 ? '' : 'alt'}`;
+    badge.textContent = game.players[playerIdx];
+    clueOrderDiv.appendChild(badge);
+  });
+  
   game.timerInterval = setInterval(()=>{
     if(!game.timerRunning) return;
     game.timerRemaining--;
