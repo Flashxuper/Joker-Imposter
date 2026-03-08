@@ -267,7 +267,7 @@ footer a{color:var(--accent);text-decoration:none}
       </div>
       <div>
         <label>Category</label>
-        <select id="category">
+        <select id="category" onchange="toggleCategoryInput()">
           <option value="random">🎲 Random</option>
           <option value="food">🍕 Food</option>
           <option value="animals">🐾 Animals</option>
@@ -276,7 +276,12 @@ footer a{color:var(--accent);text-decoration:none}
           <option value="sports">⚽ Sports</option>
           <option value="tech">💻 Tech</option>
           <option value="music">🎵 Music</option>
+          <option value="custom">✏️ Custom</option>
         </select>
+        <div id="customCategoryDiv" style="display:none;margin-top:.5rem">
+          <input type="text" id="customCategoryName" placeholder="Category name (e.g., Marvel Characters)" style="margin-bottom:.5rem">
+          <textarea id="customCategoryWords" placeholder="Words separated by commas (e.g., Spiderman, Iron Man, Thor)" style="width:100%;padding:.7rem .9rem;background:var(--surface);color:var(--text);border-radius:10px;font-family:inherit;font-size:1rem;border:1px solid rgba(255,255,255,.08);min-height:80px;resize:vertical"></textarea>
+        </div>
       </div>
     </div>
     <div class="input-row">
@@ -285,10 +290,25 @@ footer a{color:var(--accent);text-decoration:none}
         <input type="number" id="timerInput" min="30" max="300" value="90" step="10">
       </div>
       <div>
-        <label>Joker?</label>
+        <label>Imposters</label>
+        <select id="imposterCount">
+          <option value="random">🎲 Random</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+    </div>
+    <div class="input-row">
+      <div>
+        <label>Jokers</label>
         <select id="jokerToggle">
-          <option value="yes">Yes 🃏</option>
-          <option value="no">No</option>
+          <option value="none">No</option>
+          <option value="1">1 🃏</option>
+          <option value="2">2 🃏🃏</option>
+          <option value="random">🎲 Random</option>
         </select>
       </div>
     </div>
@@ -369,8 +389,9 @@ footer a{color:var(--accent);text-decoration:none}
     <p style="margin-bottom:.6rem;color:var(--muted);font-size:.85rem">The word was:</p>
     <p style="font-family:'Dela Gothic One',sans-serif;font-size:1.5rem" id="revealWord"></p>
   </div>
-  <button class="btn btn-primary" onclick="playAgain()">Play Again 🔄</button>
-  <button class="btn btn-outline" onclick="backToSetup()" style="margin-top:.5rem">New Game ⚙️</button>
+  <button class="btn btn-primary" onclick="continueGame()" id="continueGameBtn" style="margin-top:.5rem">Continue 🔄</button>
+  <button class="btn btn-primary" onclick="playAgain()" id="playAgainBtn" class="hidden" style="margin-top:.5rem">Play Again 🔄</button>
+  <button class="btn btn-outline" onclick="backToSetup()" id="newGameBtn" class="hidden" style="margin-top:.5rem">New Game ⚙️</button>
 </div>
 
 <footer>Created by Daniel Johnson</footer>
@@ -393,6 +414,17 @@ let game = {};
 const countInput = document.getElementById('playerCount');
 countInput.addEventListener('input', renderNameInputs);
 renderNameInputs();
+
+function toggleCategoryInput(){
+  const category = document.getElementById('category').value;
+  const customDiv = document.getElementById('customCategoryDiv');
+  if(category === 'custom'){
+    customDiv.style.display = 'block';
+    document.getElementById('customCategoryName').focus();
+  } else {
+    customDiv.style.display = 'none';
+  }
+}
 
 function renderNameInputs(){
   const n = Math.max(4, Math.min(20, parseInt(countInput.value)||5));
@@ -419,7 +451,36 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 function startGame(){
   const n = Math.max(4, Math.min(20, parseInt(countInput.value)||5));
   const cat = document.getElementById('category').value;
-  const hasJoker = document.getElementById('jokerToggle').value === 'yes';
+  const imposterInput = document.getElementById('imposterCount').value;
+  let numImposters;
+  
+  if(imposterInput === 'random'){
+    // Random imposters, but at least 1 civilian must remain
+    const maxImposters = Math.max(1, n - 2); // Keep at least 1 civilian (and 1 joker if enabled)
+    numImposters = Math.floor(Math.random() * maxImposters) + 1;
+  } else {
+    numImposters = Math.max(1, Math.min(n - 2, parseInt(imposterInput)||1));
+  }
+  
+  const jokerInput = document.getElementById('jokerToggle').value;
+  let numJokers;
+  
+  if(jokerInput === 'random'){
+    // 75% chance of at least 1 joker, 25% chance of 0 jokers
+    const hasJoker = Math.random() < 0.75;
+    if(hasJoker){
+      // Random 1-N jokers, but at least 1 civilian must remain
+      const maxJokers = Math.max(1, n - numImposters - 2); // Keep at least 1 civilian
+      numJokers = Math.floor(Math.random() * maxJokers) + 1;
+    } else {
+      numJokers = 0;
+    }
+  } else if(jokerInput === 'none'){
+    numJokers = 0;
+  } else {
+    numJokers = Math.max(0, Math.min(n - numImposters - 2, parseInt(jokerInput)||0));
+  }
+  
   const timerSec = Math.max(30, parseInt(document.getElementById('timerInput').value)||90);
 
   // Collect names
@@ -436,6 +497,25 @@ function startGame(){
     const picked = keys[Math.floor(Math.random()*keys.length)];
     pool = WORDS[picked];
     catLabel = picked.charAt(0).toUpperCase()+picked.slice(1);
+  } else if(cat==='custom'){
+    // Use custom category
+    const catName = document.getElementById('customCategoryName').value.trim();
+    const catWords = document.getElementById('customCategoryWords').value.trim();
+    
+    if(!catName || !catWords){
+      alert('Please enter both a category name and words!');
+      return;
+    }
+    
+    // Parse words from comma-separated input
+    pool = catWords.split(',').map(word => word.trim()).filter(word => word.length > 0);
+    
+    if(pool.length === 0){
+      alert('Please enter at least one word!');
+      return;
+    }
+    
+    catLabel = catName;
   } else {
     pool = WORDS[cat];
     catLabel = cat.charAt(0).toUpperCase()+cat.slice(1);
@@ -445,13 +525,21 @@ function startGame(){
   // Assign roles
   const roles = new Array(n).fill('civilian');
   const indices = shuffle([...Array(n).keys()]);
-  roles[indices[0]] = 'imposter';
-  if(hasJoker && n >= 4) roles[indices[1]] = 'joker';
+  
+  // Assign imposters
+  for(let i = 0; i < numImposters; i++){
+    roles[indices[i]] = 'imposter';
+  }
+  
+  // Assign jokers
+  for(let i = 0; i < numJokers; i++){
+    roles[indices[numImposters + i]] = 'joker';
+  }
 
   // Randomize clue order
   const clueOrder = shuffle([...Array(n).keys()]);
   
-  game = { players, roles, word, catLabel, currentPlayer:0, timerSec, timerRemaining:timerSec, timerInterval:null, timerRunning:false, votedPlayer:null, hasJoker, clueOrder };
+  game = { players, roles, word, catLabel, currentPlayer:0, timerSec, timerRemaining:timerSec, timerInterval:null, timerRunning:false, votedPlayer:null, numJokers, clueOrder, numImposters, pool, isCustom: cat === 'custom' };
   passToPlayer(0);
 }
 
@@ -562,36 +650,151 @@ function goToVote(){
 function submitVote(){
   if(game.votedPlayer===null) return;
   const votedRole = game.roles[game.votedPlayer];
+  
+  // Mark player as eliminated
+  game.roles[game.votedPlayer] = 'eliminated-' + votedRole;
+  
+  // Count remaining roles
+  const remainingImposters = game.roles.filter(r => r === 'imposter').length;
+  const remainingCivilians = game.roles.filter(r => r === 'civilian').length;
+  const remainingJoker = game.roles.filter(r => r === 'joker').length;
+  
   const banner = document.getElementById('resultBanner');
+  let gameEnded = false;
+  let winningTeam = null;
 
-  if(votedRole==='imposter'){
+  // Check win conditions
+  if(remainingImposters === 0 && remainingJoker === 0){
+    // All imposters and joker are out
     banner.className='result-banner group-wins';
-    banner.innerHTML=`<h2>🎉 Group Wins!</h2><p>You found the Imposter!</p>`;
+    banner.innerHTML=`<h2>🎉 Group Wins!</h2><p>All Imposters and Joker are eliminated!</p>`;
+    gameEnded = true;
+    winningTeam = 'group';
+  } else if(remainingImposters === 0 && remainingJoker > 0){
+    // All imposters out but joker still alive
+    banner.className='result-banner group-wins';
+    banner.innerHTML=`<h2>🎉 Group Wins!</h2><p>All Imposters are eliminated!</p>`;
+    gameEnded = true;
+    winningTeam = 'group';
   } else if(votedRole==='joker'){
+    // Joker was voted out
     banner.className='result-banner joker-wins';
     banner.innerHTML=`<h2>🃏 Joker Wins!</h2><p>The Joker tricked you into voting them out!</p>`;
-  } else {
+    gameEnded = true;
+    winningTeam = 'joker';
+  } else if(votedRole==='civilian'){
+    // A civilian was voted out - imposters win immediately
     banner.className='result-banner imposter-wins';
-    banner.innerHTML=`<h2>👹 Imposter Survives!</h2><p>You voted out a Civilian!</p>`;
+    banner.innerHTML=`<h2>👹 Imposters Win!</h2><p>You voted out a Civilian!</p>`;
+    gameEnded = true;
+    winningTeam = 'imposter';
+  } else if(votedRole==='imposter'){
+    // An imposter was voted out but more remain
+    banner.className='result-banner group-wins';
+    banner.innerHTML=`<h2>✓ Imposter Eliminated</h2><p>But more Imposters remain...</p>`;
   }
 
-  // Reveal list
+  // Reveal list - only show full roles if game ended
   const list = document.getElementById('revealList');
   list.innerHTML='';
   game.players.forEach((name,i)=>{
     const li = document.createElement('li');
-    const roleClass = game.roles[i]==='civilian'?'t-civilian':game.roles[i]==='imposter'?'t-imposter':'t-joker';
-    const roleText = game.roles[i].charAt(0).toUpperCase()+game.roles[i].slice(1);
-    li.innerHTML=`<span class="name">${name}${i===game.votedPlayer?'<span class="voted-out"> (Voted Out)</span>':''}</span><span class="role-tag ${roleClass}">${roleText}</span>`;
+    const role = game.roles[i];
+    const displayRole = role.includes('eliminated-') ? role.split('-')[1] : role;
+    const roleClass = displayRole==='civilian'?'t-civilian':displayRole==='imposter'?'t-imposter':'t-joker';
+    const roleText = displayRole.charAt(0).toUpperCase()+displayRole.slice(1);
+    const isVoted = i===game.votedPlayer ? '<span class="voted-out"> (Voted Out)</span>' : '';
+    const isEliminated = role.includes('eliminated-') && i !== game.votedPlayer ? '<span class="voted-out"> (Eliminated)</span>' : '';
+    
+    let roleDisplay = '';
+    if(gameEnded){
+      // Show all roles if game ended
+      roleDisplay = `<span class="role-tag ${roleClass}">${roleText}</span>`;
+    } else {
+      // Only show role of voted out player
+      if(i === game.votedPlayer){
+        roleDisplay = `<span class="role-tag ${roleClass}">${roleText}</span>`;
+      } else {
+        roleDisplay = `<span class="role-tag" style="background:var(--surface);color:var(--muted)">?</span>`;
+      }
+    }
+    
+    li.innerHTML=`<span class="name">${name}${isVoted}${isEliminated}</span>${roleDisplay}`;
     list.appendChild(li);
   });
 
   document.getElementById('revealWord').textContent = game.word;
+  
+  // Show results screen
   show('results-screen');
+  
+  // If game hasn't ended, show continue button
+  if(!gameEnded){
+    const btn = document.getElementById('continueGameBtn');
+    if(btn) btn.classList.remove('hidden');
+    const playAgainBtn = document.getElementById('playAgainBtn');
+    if(playAgainBtn) playAgainBtn.classList.add('hidden');
+    const newGameBtn = document.getElementById('newGameBtn');
+    if(newGameBtn) newGameBtn.classList.add('hidden');
+  } else {
+    const btn = document.getElementById('continueGameBtn');
+    if(btn) btn.classList.add('hidden');
+    const playAgainBtn = document.getElementById('playAgainBtn');
+    if(playAgainBtn) playAgainBtn.classList.remove('hidden');
+    const newGameBtn = document.getElementById('newGameBtn');
+    if(newGameBtn) newGameBtn.classList.remove('hidden');
+  }
 }
 
 function playAgain(){
   // Keep same settings, re-shuffle
+  startGame();
+}
+
+function continueGame(){
+  // Continue with remaining players (non-eliminated)
+  const activePlayers = game.players.map((name, i) => ({ name, index: i }))
+    .filter(p => !game.roles[p.index].includes('eliminated'));
+  
+  const n = activePlayers.length;
+  
+  if(n < 2){
+    // Not enough players to continue
+    playAgain();
+    return;
+  }
+  
+  // Create new player list with remaining players, keeping track of original indices
+  const newPlayers = activePlayers.map(p => p.name);
+  const originalIndices = activePlayers.map(p => p.index);
+  
+  // Keep the same word and category
+  const word = game.word;
+  const catLabel = game.catLabel;
+  
+  // Create new roles array that preserves who was originally what
+  const roles = new Array(n).fill('civilian');
+  activePlayers.forEach((player, newIdx) => {
+    const originalRole = game.roles[player.index];
+    const baseRole = originalRole.includes('eliminated-') ? originalRole.split('-')[1] : originalRole;
+    if(baseRole === 'imposter'){
+      roles[newIdx] = 'imposter';
+    } else if(baseRole === 'joker'){
+      roles[newIdx] = 'joker';
+    }
+  });
+  
+  const clueOrder = shuffle([...Array(n).keys()]);
+  const timerSec = game.timerSec;
+  
+  game = { players: newPlayers, roles, word, catLabel, currentPlayer:0, timerSec, timerRemaining:timerSec, timerInterval:null, timerRunning:false, votedPlayer:null, numJokers: game.numJokers, clueOrder, numImposters: game.numImposters, originalIndices, pool: game.pool, isCustom: game.isCustom };
+  
+  // Skip straight to timer since players already know the word
+  startTimer();
+}
+
+function playAgain(){
+  // Keep same settings, re-shuffle with all original players
   startGame();
 }
 
