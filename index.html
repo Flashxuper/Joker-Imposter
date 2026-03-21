@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Imposter + Joker | Party Word Game</title>
+<title>Imposter + Jester + Oracle | Party Word Game</title>
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -16,7 +16,7 @@
   --surface:#14141f;
   --card:#1c1c2e;
   --accent:#ff3d6e;
-  --joker:#ffd23f;
+  --jester:#ffd23f;
   --imposter:#8b5cf6;
   --civilian:#22d3ee;
   --text:#e8e8f0;
@@ -27,11 +27,11 @@
 /* Light Mode */
 @media (prefers-color-scheme: light) {
   :root {
-    --bg:#f8f7fc;
-    --surface:#ede6f7;
-    --card:#e0d5f0;
+    --bg:#e0f9fc;
+    --surface:#c8f4f8;
+    --card:#b0eef5;
     --accent:#ff3d6e;
-    --joker:#d4a520;
+    --jester:#d4a520;
     --imposter:#7c3aed;
     --civilian:#0891b2;
     --text:#1a1a2e;
@@ -67,7 +67,7 @@ input,select{font-family:inherit;outline:none;border:none}
 /* ── Header ── */
 header{text-align:center;padding:2.5rem 1rem 1rem;animation:fadeDown .6s ease}
 header h1{font-family:'Dela Gothic One',sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);
-background:linear-gradient(135deg,var(--accent),var(--imposter),var(--joker));
+background:linear-gradient(135deg,var(--accent),var(--imposter),var(--jester));
 -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-1px}
 header p{color:var(--muted);margin-top:.4rem;font-size:.95rem}
 
@@ -130,12 +130,14 @@ box-shadow:0 4px 20px rgba(255,61,110,.3)}
 background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(255,255,255,.05) 10px,rgba(255,255,255,.05) 20px)}
 .role-card.civilian{background:linear-gradient(160deg,#0f2a2e,#132e3a);border:2px solid var(--civilian)}
 .role-card.imposter{background:linear-gradient(160deg,#1f0f2e,#2a1240);border:2px solid var(--imposter)}
-.role-card.joker{background:linear-gradient(160deg,#2e2a0f,#3a2e0f);border:2px solid var(--joker)}
+.role-card.oracle{background:linear-gradient(160deg,#1a0f2e,#2a1548);border:2px solid #a78bfa}
+.role-card.jester{background:linear-gradient(160deg,#2e2a0f,#3a2e0f);border:2px solid var(--jester)}
 
 @media (prefers-color-scheme: light) {
   .role-card.civilian{background:linear-gradient(160deg,#d4f0f5,#e0f8fb);border:2px solid var(--civilian)}
   .role-card.imposter{background:linear-gradient(160deg,#ede6f7,#f5eeff);border:2px solid var(--imposter)}
-  .role-card.joker{background:linear-gradient(160deg,#fef7e0,#fffaeb);border:2px solid var(--joker)}
+  .role-card.oracle{background:linear-gradient(160deg,#f0e6ff,#f9f0ff);border:2px solid #a78bfa}
+  .role-card.jester{background:linear-gradient(160deg,#fef7e0,#fffaeb);border:2px solid var(--jester)}
 }
 
 .role-category{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:.5rem;
@@ -151,7 +153,8 @@ background:rgba(255,255,255,.06);display:inline-block;padding:.25rem .8rem;borde
 .role-label{font-family:'Dela Gothic One',sans-serif;font-size:1.6rem;margin-bottom:.4rem}
 .role-card.civilian .role-label{color:var(--civilian)}
 .role-card.imposter .role-label{color:var(--imposter)}
-.role-card.joker .role-label{color:var(--joker)}
+.role-card.oracle .role-label{color:#a78bfa}
+.role-card.jester .role-label{color:var(--jester)}
 .role-word{font-size:1.3rem;color:var(--text);margin-top:.3rem;opacity:.9}
 .role-hint{font-size:.8rem;color:var(--muted);margin-top:.6rem;font-style:italic}
 .player-tag{font-size:1.1rem;color:var(--muted);margin-bottom:1rem;font-weight:500}
@@ -169,13 +172,13 @@ background:rgba(255,255,255,.06);display:inline-block;padding:.25rem .8rem;borde
 .rule-box .title{font-size:.72rem;font-weight:700;margin-top:.3rem;text-transform:uppercase;letter-spacing:.5px}
 .rule-box.c .title{color:var(--civilian)}
 .rule-box.i .title{color:var(--imposter)}
-.rule-box.j .title{color:var(--joker)}
-.rule-box .desc{font-size:.68rem;color:var(--muted);margin-top:.2rem;line-height:1.3}
+.rule-box.j .title{color:var(--jester)}
+.rule-box .desc{font-size:.85rem;color:var(--muted);margin-top:.2rem;line-height:1.3}
 
 /* ── Timer ── */
 .timer-display{text-align:center;margin:1rem 0}
 .timer-display .time{font-family:'Dela Gothic One',sans-serif;font-size:3rem;
-background:linear-gradient(135deg,var(--accent),var(--joker));
+background:linear-gradient(135deg,var(--accent),var(--jester));
 -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;transition:color .3s}
 .timer-display .time.warning{-webkit-text-fill-color:var(--accent);animation:pulse 1s infinite}
 .timer-label{color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:1px;transition:color .3s}
@@ -207,16 +210,16 @@ color:var(--text);font-weight:600;font-size:.95rem;border:2px solid transparent;
 .result-banner.group-wins h2{color:#22c55e}
 .result-banner.imposter-wins{background:linear-gradient(160deg,#1f0f2e,#2a1240);border:2px solid var(--imposter)}
 .result-banner.imposter-wins h2{color:var(--imposter)}
-.result-banner.joker-wins{background:linear-gradient(160deg,#2e2a0f,#3a2e0f);border:2px solid var(--joker)}
-.result-banner.joker-wins h2{color:var(--joker)}
+.result-banner.jester-wins{background:linear-gradient(160deg,#2e2a0f,#3a2e0f);border:2px solid var(--jester)}
+.result-banner.jester-wins h2{color:var(--jester)}
 
 @media (prefers-color-scheme: light) {
   .result-banner.group-wins{background:linear-gradient(160deg,#dcf5e3,#ecf9f0);border:2px solid #16a34a}
   .result-banner.group-wins h2{color:#16a34a}
   .result-banner.imposter-wins{background:linear-gradient(160deg,#ede6f7,#f5eeff);border:2px solid var(--imposter)}
   .result-banner.imposter-wins h2{color:var(--imposter)}
-  .result-banner.joker-wins{background:linear-gradient(160deg,#fef7e0,#fffaeb);border:2px solid var(--joker)}
-  .result-banner.joker-wins h2{color:var(--joker)}
+  .result-banner.jester-wins{background:linear-gradient(160deg,#fef7e0,#fffaeb);border:2px solid var(--jester)}
+  .result-banner.jester-wins h2{color:var(--jester)}
 }
 
 .reveal-list{list-style:none;padding:0}
@@ -226,12 +229,12 @@ border-radius:10px;margin-bottom:.4rem;background:var(--surface);transition:back
 .reveal-list .role-tag{font-size:.75rem;padding:.2rem .6rem;border-radius:6px;font-weight:700;text-transform:uppercase;transition:all .3s}
 .role-tag.t-civilian{background:rgba(34,211,238,.12);color:var(--civilian)}
 .role-tag.t-imposter{background:rgba(139,92,246,.15);color:var(--imposter)}
-.role-tag.t-joker{background:rgba(255,210,63,.12);color:var(--joker)}
+.role-tag.t-jester{background:rgba(255,210,63,.12);color:var(--jester)}
 
 @media (prefers-color-scheme: light) {
   .role-tag.t-civilian{background:rgba(8,145,178,.1);color:var(--civilian)}
   .role-tag.t-imposter{background:rgba(124,58,237,.1);color:var(--imposter)}
-  .role-tag.t-joker{background:rgba(212,165,32,.1);color:var(--joker)}
+  .role-tag.t-jester{background:rgba(212,165,32,.1);color:var(--jester)}
 }
 
 .voted-out{font-size:.8rem;color:var(--accent);font-style:italic;margin-left:.4rem}
@@ -245,7 +248,7 @@ footer a{color:var(--accent);text-decoration:none}
 <body>
 
 <header>
-  <h1>IMPOSTER + JOKER</h1>
+  <h1>IMPOSTER + JESTER + ORACLE</h1>
   <p>Pass & Play Party Game</p>
 </header>
 
@@ -256,7 +259,8 @@ footer a{color:var(--accent);text-decoration:none}
     <div class="rules-grid">
       <div class="rule-box c"><div class="emoji">🕵️</div><div class="title">Civilian</div><div class="desc">Knows the word. Find the Imposter.</div></div>
       <div class="rule-box i"><div class="emoji">👹</div><div class="title">Imposter</div><div class="desc">Doesn't know the word. Blend in!</div></div>
-      <div class="rule-box j"><div class="emoji">🃏</div><div class="title">Joker</div><div class="desc">Knows the word. Get voted out!</div></div>
+      <div class="rule-box j"><div class="emoji">🃏</div><div class="title">Jester</div><div class="desc">Knows the word. Get voted out!</div></div>
+      <div class="rule-box c"><div class="emoji">🔮</div><div class="title">Oracle</div><div class="desc">Civilian who knows 1 other civilian.</div></div>
     </div>
   </div>
   <div class="card">
@@ -286,29 +290,68 @@ footer a{color:var(--accent);text-decoration:none}
     </div>
     <div class="input-row">
       <div>
-        <label>Round Timer (sec)</label>
-        <input type="number" id="timerInput" min="30" max="300" value="90" step="10">
+        <label>Round Timer</label>
+        <select id="timerToggle" onchange="toggleTimerInput()">
+          <option value="none">No Timer</option>
+          <option value="30">30 sec</option>
+          <option value="60">1 min</option>
+          <option value="90">1.5 min</option>
+          <option value="120">2 min</option>
+          <option value="custom">✏️ Custom</option>
+        </select>
+        <input type="number" id="customTimerInput" min="1" max="10" value="1.5" step="0.5" placeholder="Enter minutes" style="margin-top:.5rem;display:none;">
       </div>
       <div>
         <label>Imposters</label>
         <select id="imposterCount">
-          <option value="random">🎲 Random</option>
-          <option value="1">1</option>
+          <option value="0-3">🎲 Random (0-3)</option>
+          <option value="1" selected>1</option>
           <option value="2">2</option>
           <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
+          <option value="0-1">0-1</option>
+          <option value="0-2">0-2</option>
+          <option value="1-2">1-2</option>
+          <option value="1-3">1-3</option>
+          <option value="2-3">2-3</option>
         </select>
       </div>
     </div>
     <div class="input-row">
       <div>
-        <label>Jokers</label>
-        <select id="jokerToggle">
-          <option value="none">No</option>
-          <option value="1">1 🃏</option>
-          <option value="2">2 🃏🃏</option>
+        <label>Jesters</label>
+        <select id="jesterCount">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="0-1">0-1</option>
+          <option value="0-2">0-2</option>
+          <option value="1-2">1-2</option>
+        </select>
+      </div>
+      <div>
+        <label>Oracle?</label>
+        <select id="oracleToggle">
+          <option value="no">No</option>
+          <option value="yes">Yes 🔮</option>
           <option value="random">🎲 Random</option>
+        </select>
+      </div>
+      <div>
+        <label>Imposters Know Each Other?</label>
+        <select id="impostersKnowToggle">
+          <option value="yes">Yes</option>
+          <option value="no" selected>No</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="input-row">
+      <div>
+        <label>End Game When 1 Imposter Gets Out?</label>
+        <select id="endGameToggle">
+          <option value="yes">Yes</option>
+          <option value="no">No - All Imposters Need to Get Out</option>
         </select>
       </div>
     </div>
@@ -372,6 +415,7 @@ footer a{color:var(--accent);text-decoration:none}
   <div class="card" style="text-align:center">
     <h2 style="font-family:'Dela Gothic One',sans-serif;margin-bottom:.2rem">Time to Vote!</h2>
     <p style="color:var(--muted);font-size:.85rem">Who is the Imposter? Vote together!</p>
+    <p style="color:var(--muted);font-size:.8rem;margin-top:.5rem" id="voteCategory"></p>
   </div>
   <div class="vote-grid" id="voteGrid"></div>
   <button class="btn btn-primary" onclick="submitVote()" style="margin-top:.5rem" id="submitVoteBtn" disabled>Reveal Results ✨</button>
@@ -426,6 +470,17 @@ function toggleCategoryInput(){
   }
 }
 
+function toggleTimerInput(){
+  const timerToggle = document.getElementById('timerToggle').value;
+  const customInput = document.getElementById('customTimerInput');
+  if(timerToggle === 'custom'){
+    customInput.style.display = 'block';
+    customInput.focus();
+  } else {
+    customInput.style.display = 'none';
+  }
+}
+
 function renderNameInputs(){
   const n = Math.max(4, Math.min(20, parseInt(countInput.value)||5));
   const box = document.getElementById('nameInputs');
@@ -450,38 +505,92 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 
 function startGame(){
   const n = Math.max(4, Math.min(20, parseInt(countInput.value)||5));
+  const maxImposters = Math.floor(n / 2); // Maximum half of players
   const cat = document.getElementById('category').value;
   const imposterInput = document.getElementById('imposterCount').value;
   let numImposters;
   
-  if(imposterInput === 'random'){
-    // Random imposters, but at least 1 civilian must remain
-    const maxImposters = Math.max(1, n - 2); // Keep at least 1 civilian (and 1 joker if enabled)
-    numImposters = Math.floor(Math.random() * maxImposters) + 1;
-  } else {
-    numImposters = Math.max(1, Math.min(n - 2, parseInt(imposterInput)||1));
+  // Check if selected option could potentially exceed half
+  if(imposterInput === '2-3' && maxImposters < 2){
+    alert(`With ${n} players, you can have at most ${maxImposters} imposter(s). Please select a different imposter option.`);
+    return;
+  } else if(imposterInput === '0-3' && maxImposters < 3){
+    alert(`With ${n} players, you can have at most ${maxImposters} imposter(s). Please select a different imposter option.`);
+    return;
+  } else if(imposterInput === '1-3' && maxImposters < 3){
+    alert(`With ${n} players, you can have at most ${maxImposters} imposter(s). Please select a different imposter option.`);
+    return;
+  } else if((imposterInput === '3') && maxImposters < 3){
+    alert(`With ${n} players, you can have at most ${maxImposters} imposter(s). Please select a different imposter option.`);
+    return;
   }
   
-  const jokerInput = document.getElementById('jokerToggle').value;
-  let numJokers;
-  
-  if(jokerInput === 'random'){
-    // 75% chance of at least 1 joker, 25% chance of 0 jokers
-    const hasJoker = Math.random() < 0.75;
-    if(hasJoker){
-      // Random 1-N jokers, but at least 1 civilian must remain
-      const maxJokers = Math.max(1, n - numImposters - 2); // Keep at least 1 civilian
-      numJokers = Math.floor(Math.random() * maxJokers) + 1;
-    } else {
-      numJokers = 0;
+  if(imposterInput === 'random' || imposterInput === '1-3'){
+    // Random 1-3 imposters with equal chance, capped at half
+    numImposters = Math.min(maxImposters, Math.floor(Math.random() * 3) + 1);
+    numImposters = Math.max(0, numImposters); // Allow 0 if less than half
+  } else if(imposterInput === '0-1'){
+    // Random 0-1 imposters with equal chance
+    numImposters = Math.min(maxImposters, Math.floor(Math.random() * 2));
+  } else if(imposterInput === '0-2'){
+    // Random 0-2 imposters with equal chance, capped at half
+    numImposters = Math.min(maxImposters, Math.floor(Math.random() * 3));
+  } else if(imposterInput === '0-3'){
+    // Random 0-3 imposters with equal chance, capped at half
+    numImposters = Math.min(maxImposters, Math.floor(Math.random() * 4));
+  } else if(imposterInput === '1-2'){
+    // Random 1-2 imposters with equal chance, capped at half
+    numImposters = Math.min(maxImposters, Math.floor(Math.random() * 2) + 1);
+  } else if(imposterInput === '2-3'){
+    // Random 2-3 imposters with equal chance, capped at half
+    numImposters = Math.min(maxImposters, Math.floor(Math.random() * 2) + 2);
+  } else if(imposterInput === 'custom'){
+    // Use custom input
+    const customValue = parseInt(document.getElementById('customImposterCount').value);
+    if(!customValue || customValue < 1 || customValue > 3){
+      alert('Please enter a valid number between 1 and 3!');
+      return;
     }
-  } else if(jokerInput === 'none'){
-    numJokers = 0;
+    numImposters = Math.min(maxImposters, customValue);
   } else {
-    numJokers = Math.max(0, Math.min(n - numImposters - 2, parseInt(jokerInput)||0));
+    // Single number selected, capped at half
+    numImposters = Math.max(0, Math.min(maxImposters, parseInt(imposterInput)||1));
   }
   
-  const timerSec = Math.max(30, parseInt(document.getElementById('timerInput').value)||90);
+  const jesterInput = document.getElementById('jesterCount').value;
+  let numJesters;
+  
+  if(jesterInput === '0-1'){
+    // Random 0-1 jesters with equal chance
+    numJesters = Math.floor(Math.random() * 2); // 0 or 1
+  } else if(jesterInput === '0-2'){
+    // Random 0-2 jesters with equal chance
+    numJesters = Math.floor(Math.random() * 3); // 0, 1, or 2
+  } else if(jesterInput === '1-2'){
+    // Random 1-2 jesters with equal chance
+    numJesters = Math.floor(Math.random() * 2) + 1; // 1 or 2
+  } else {
+    // Single number selected (0, 1, or 2)
+    numJesters = Math.max(0, Math.min(2, parseInt(jesterInput)||0));
+  }
+  
+  // If there are no imposters, ensure at least 1 jester
+  if(numImposters === 0 && numJesters === 0){
+    numJesters = 1;
+  }
+  
+  const hasOracle = document.getElementById('oracleToggle').value === 'yes' || (document.getElementById('oracleToggle').value === 'random' && Math.random() < 0.5);
+  
+  const timerToggle = document.getElementById('timerToggle').value;
+  let timerSec;
+  if(timerToggle === 'none'){
+    timerSec = 0; // No timer
+  } else if(timerToggle === 'custom'){
+    const minutes = parseFloat(document.getElementById('customTimerInput').value) || 1.5;
+    timerSec = Math.max(60, Math.round(minutes * 60)); // Convert minutes to seconds, minimum 1 minute
+  } else {
+    timerSec = parseInt(timerToggle) || 90;
+  }
 
   // Collect names
   const players = [];
@@ -531,15 +640,36 @@ function startGame(){
     roles[indices[i]] = 'imposter';
   }
   
-  // Assign jokers
-  for(let i = 0; i < numJokers; i++){
-    roles[indices[numImposters + i]] = 'joker';
+  // Assign jesters
+  for(let i = 0; i < numJesters; i++){
+    roles[indices[numImposters + i]] = 'jester';
   }
-
+  
+  // Assign oracle (one random civilian who knows another civilian)
+  let oracleIdx = -1;
+  let oracleKnowsIdx = -1;
+  if(hasOracle){
+    // Find all civilian indices
+    const civilianIndices = roles.map((role, idx) => role === 'civilian' ? idx : -1).filter(idx => idx !== -1);
+    
+    if(civilianIndices.length >= 2){
+      // Randomly pick an oracle from civilians
+      oracleIdx = civilianIndices[Math.floor(Math.random() * civilianIndices.length)];
+      roles[oracleIdx] = 'oracle';
+      
+      // Randomly pick another civilian for oracle to know
+      const otherCivilians = civilianIndices.filter(idx => idx !== oracleIdx);
+      oracleKnowsIdx = otherCivilians[Math.floor(Math.random() * otherCivilians.length)];
+    }
+  }
+  
   // Randomize clue order
   const clueOrder = shuffle([...Array(n).keys()]);
   
-  game = { players, roles, word, catLabel, currentPlayer:0, timerSec, timerRemaining:timerSec, timerInterval:null, timerRunning:false, votedPlayer:null, numJokers, clueOrder, numImposters, pool, isCustom: cat === 'custom' };
+  const impostersKnow = document.getElementById('impostersKnowToggle').value === 'yes';
+  const endGameWhenAllImpostersOut = document.getElementById('endGameToggle').value === 'yes';
+  
+  game = { players, roles, word, catLabel, currentPlayer:0, timerSec, timerRemaining:timerSec, timerInterval:null, timerRunning:false, votedPlayer:null, numJesters, clueOrder, numImposters, pool, isCustom: cat === 'custom', oracleIdx, oracleKnowsIdx, impostersKnow, endGameWhenAllImpostersOut };
   passToPlayer(0);
 }
 
@@ -567,9 +697,28 @@ function showRole(){
     hint.textContent='Give clues to find the Imposter. Don\'t be too obvious!';
   } else if(role==='imposter'){
     emoji.textContent='👹'; label.textContent='IMPOSTER'; word.textContent='You don\'t know the word!';
-    hint.textContent='Blend in. Fake your clues. Survive the vote!';
+    if(game.impostersKnow){
+      // Find other imposters
+      const otherImposters = game.players.map((name, idx) => 
+        idx !== i && game.roles[idx] === 'imposter' ? name : null
+      ).filter(name => name !== null);
+      
+      if(otherImposters.length > 0){
+        word.textContent=`Your allies: ${otherImposters.join(', ')}`;
+        hint.textContent='Blend in together!';
+      } else {
+        word.textContent='You\'re the only Imposter';
+        hint.textContent='Blend in alone!';
+      }
+    } else {
+      hint.textContent='Don\'t trust anyone - even other Imposters! Survive the vote!';
+    }
+  } else if(role==='oracle'){
+    emoji.textContent='🔮'; label.textContent='ORACLE'; word.textContent=`The word is: ${game.word}`;
+    const knownCivilian = game.players[game.oracleKnowsIdx];
+    hint.textContent=`You know ${knownCivilian} is a Civilian. Trust them!`;
   } else {
-    emoji.textContent='🃏'; label.textContent='JOKER'; word.textContent=`The word is: ${game.word}`;
+    emoji.textContent='🃏'; label.textContent='JESTER'; word.textContent=`The word is: ${game.word}`;
     hint.textContent='You know the word but your goal is to GET VOTED OUT!';
   }
   show('role-screen');
@@ -586,6 +735,12 @@ function nextPlayer(){
 
 // ── Timer ──
 function startTimer(){
+  // If no timer, skip straight to voting
+  if(game.timerSec === 0){
+    goToVote();
+    return;
+  }
+  
   game.timerRemaining = game.timerSec;
   updateTimerDisplay();
   game.timerRunning = true;
@@ -632,6 +787,20 @@ function goToVote(){
   game.votedPlayer = null;
   const grid = document.getElementById('voteGrid');
   grid.innerHTML = '';
+  
+  // Add "No Imposters" button first
+  const noImpBtn = document.createElement('button');
+  noImpBtn.className='vote-btn'; 
+  noImpBtn.textContent='No Imposters 🚫';
+  noImpBtn.onclick=()=>{
+    grid.querySelectorAll('.vote-btn').forEach(b=>b.classList.remove('selected'));
+    noImpBtn.classList.add('selected');
+    game.votedPlayer = -1; // Special index for "No Imposters"
+    document.getElementById('submitVoteBtn').disabled = false;
+  };
+  grid.appendChild(noImpBtn);
+  
+  // Add player vote buttons
   game.players.forEach((name,i)=>{
     const btn = document.createElement('button');
     btn.className='vote-btn'; btn.textContent=name;
@@ -644,11 +813,59 @@ function goToVote(){
     grid.appendChild(btn);
   });
   document.getElementById('submitVoteBtn').disabled = true;
+  document.getElementById('voteCategory').textContent = `Category: ${game.catLabel}`;
   show('vote-screen');
 }
 
 function submitVote(){
   if(game.votedPlayer===null) return;
+  
+  // Check if voting for "No Imposters"
+  if(game.votedPlayer === -1){
+    const remainingImposters = game.roles.filter(r => r === 'imposter').length;
+    const remainingJesters = game.roles.filter(r => r === 'jester').length;
+    const banner = document.getElementById('resultBanner');
+    
+    if(remainingImposters === 0 && remainingJesters === 0){
+      // Civilians win - there really are no imposters and no jesters!
+      banner.className='result-banner group-wins';
+      banner.innerHTML=`<h2>🎉 Civilians Win!</h2><p>You were right - there are no Imposters or Jesters!</p>`;
+    } else if(remainingImposters === 0 && remainingJesters > 0){
+      // Jesters win - civilians voted thinking there are no bad guys but jesters are still there
+      banner.className='result-banner jester-wins';
+      banner.innerHTML=`<h2>🃏 Jesters Win!</h2><p>There are no Imposters, but the Jesters tricked you!</p>`;
+    } else {
+      // Imposters win - civilians were wrong
+      banner.className='result-banner imposter-wins';
+      banner.innerHTML=`<h2>👹 Imposters Win!</h2><p>There were Imposters! You voted them innocent!</p>`;
+    }
+    
+    // Reveal list - show all roles
+    const list = document.getElementById('revealList');
+    list.innerHTML='';
+    game.players.forEach((name,i)=>{
+      const li = document.createElement('li');
+      const role = game.roles[i];
+      const displayRole = role.includes('eliminated-') ? role.split('-')[1] : role;
+      const roleClass = displayRole==='civilian'?'t-civilian':displayRole==='oracle'?'t-civilian':displayRole==='imposter'?'t-imposter':'t-jester';
+      const roleText = displayRole.charAt(0).toUpperCase()+displayRole.slice(1);
+      const isEliminated = role.includes('eliminated-') ? '<span class="voted-out"> (Eliminated)</span>' : '';
+      li.innerHTML=`<span class="name">${name}${isEliminated}</span><roleDisplay><span class="role-tag ${roleClass}">${roleText}</span></roleDisplay>`;
+      list.appendChild(li);
+    });
+    
+    document.getElementById('revealWord').textContent = game.word;
+    show('results-screen');
+    
+    const btn = document.getElementById('continueGameBtn');
+    if(btn) btn.classList.add('hidden');
+    const playAgainBtn = document.getElementById('playAgainBtn');
+    if(playAgainBtn) playAgainBtn.classList.remove('hidden');
+    const newGameBtn = document.getElementById('newGameBtn');
+    if(newGameBtn) newGameBtn.classList.remove('hidden');
+    return;
+  }
+  
   const votedRole = game.roles[game.votedPlayer];
   
   // Mark player as eliminated
@@ -657,31 +874,31 @@ function submitVote(){
   // Count remaining roles
   const remainingImposters = game.roles.filter(r => r === 'imposter').length;
   const remainingCivilians = game.roles.filter(r => r === 'civilian').length;
-  const remainingJoker = game.roles.filter(r => r === 'joker').length;
+  const remainingJester = game.roles.filter(r => r === 'jester').length;
   
   const banner = document.getElementById('resultBanner');
   let gameEnded = false;
   let winningTeam = null;
 
   // Check win conditions
-  if(remainingImposters === 0 && remainingJoker === 0){
-    // All imposters and joker are out
+  if(remainingImposters === 0 && remainingJester === 0){
+    // All imposters and jester are out
     banner.className='result-banner group-wins';
-    banner.innerHTML=`<h2>🎉 Group Wins!</h2><p>All Imposters and Joker are eliminated!</p>`;
+    banner.innerHTML=`<h2>🎉 Group Wins!</h2><p>All Imposters and Jester are eliminated!</p>`;
     gameEnded = true;
     winningTeam = 'group';
-  } else if(remainingImposters === 0 && remainingJoker > 0){
-    // All imposters out but joker still alive
+  } else if(remainingImposters === 0 && remainingJester > 0){
+    // All imposters out but jester still alive
     banner.className='result-banner group-wins';
     banner.innerHTML=`<h2>🎉 Group Wins!</h2><p>All Imposters are eliminated!</p>`;
     gameEnded = true;
     winningTeam = 'group';
-  } else if(votedRole==='joker'){
-    // Joker was voted out
-    banner.className='result-banner joker-wins';
-    banner.innerHTML=`<h2>🃏 Joker Wins!</h2><p>The Joker tricked you into voting them out!</p>`;
+  } else if(votedRole==='jester'){
+    // Jester was voted out
+    banner.className='result-banner jester-wins';
+    banner.innerHTML=`<h2>🃏 Jester Wins!</h2><p>The Jester tricked you into voting them out!</p>`;
     gameEnded = true;
-    winningTeam = 'joker';
+    winningTeam = 'jester';
   } else if(votedRole==='civilian'){
     // A civilian was voted out - imposters win immediately
     banner.className='result-banner imposter-wins';
@@ -689,9 +906,18 @@ function submitVote(){
     gameEnded = true;
     winningTeam = 'imposter';
   } else if(votedRole==='imposter'){
-    // An imposter was voted out but more remain
-    banner.className='result-banner group-wins';
-    banner.innerHTML=`<h2>✓ Imposter Eliminated</h2><p>But more Imposters remain...</p>`;
+    // An imposter was voted out
+    if(game.endGameWhenAllImpostersOut){
+      // End game when 1 imposter is voted out OR all imposters are out
+      banner.className='result-banner group-wins';
+      banner.innerHTML=`<h2>🎉 Group Wins!</h2><p>An Imposter has been eliminated!</p>`;
+      gameEnded = true;
+      winningTeam = 'group';
+    } else {
+      // Game continues, just note an imposter was eliminated
+      banner.className='result-banner group-wins';
+      banner.innerHTML=`<h2>✓ Imposter Eliminated</h2><p>But more Imposters remain...</p>`;
+    }
   }
 
   // Reveal list - only show full roles if game ended
@@ -701,7 +927,7 @@ function submitVote(){
     const li = document.createElement('li');
     const role = game.roles[i];
     const displayRole = role.includes('eliminated-') ? role.split('-')[1] : role;
-    const roleClass = displayRole==='civilian'?'t-civilian':displayRole==='imposter'?'t-imposter':'t-joker';
+    const roleClass = displayRole==='civilian'?'t-civilian':displayRole==='oracle'?'t-civilian':displayRole==='imposter'?'t-imposter':'t-jester';
     const roleText = displayRole.charAt(0).toUpperCase()+displayRole.slice(1);
     const isVoted = i===game.votedPlayer ? '<span class="voted-out"> (Voted Out)</span>' : '';
     const isEliminated = role.includes('eliminated-') && i !== game.votedPlayer ? '<span class="voted-out"> (Eliminated)</span>' : '';
@@ -779,15 +1005,15 @@ function continueGame(){
     const baseRole = originalRole.includes('eliminated-') ? originalRole.split('-')[1] : originalRole;
     if(baseRole === 'imposter'){
       roles[newIdx] = 'imposter';
-    } else if(baseRole === 'joker'){
-      roles[newIdx] = 'joker';
+    } else if(baseRole === 'jester'){
+      roles[newIdx] = 'jester';
     }
   });
   
   const clueOrder = shuffle([...Array(n).keys()]);
   const timerSec = game.timerSec;
   
-  game = { players: newPlayers, roles, word, catLabel, currentPlayer:0, timerSec, timerRemaining:timerSec, timerInterval:null, timerRunning:false, votedPlayer:null, numJokers: game.numJokers, clueOrder, numImposters: game.numImposters, originalIndices, pool: game.pool, isCustom: game.isCustom };
+  game = { players: newPlayers, roles, word, catLabel, currentPlayer:0, timerSec, timerRemaining:timerSec, timerInterval:null, timerRunning:false, votedPlayer:null, numJesters: game.numJesters, clueOrder, numImposters: game.numImposters, originalIndices, pool: game.pool, isCustom: game.isCustom, oracleIdx: game.oracleIdx, oracleKnowsIdx: game.oracleKnowsIdx, impostersKnow: game.impostersKnow, endGameWhenAllImpostersOut: game.endGameWhenAllImpostersOut };
   
   // Skip straight to timer since players already know the word
   startTimer();
